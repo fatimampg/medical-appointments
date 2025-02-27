@@ -4,7 +4,7 @@
 
 ## Database ER Diagram
 
-![Database ER Diagram] (images/medical-appointments-er-diagram.png)
+![Database ER Diagram](images/medical-appointments-er-diagram.png)
 
 ## Routes
 
