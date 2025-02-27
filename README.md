@@ -1,24 +1,11 @@
-# README
+# Medical appointments app (Ruby on Rails - API only) 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Ruby on Rails (API only) application (under development) for managing online medical appointments.
 
-Things you may want to cover:
+## Database ER Diagram
 
-* Ruby version
+![Database ER Diagram] (images/medical-appointments-er-diagram.png)
 
-* System dependencies
+## Routes
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+(under development)
