@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   resources :doctors
   resources :patients
-  mount_devise_token_auth_for 'User', at: 'auth'
+  resources :specializations
+  # resources :doctors_specializations
+
+  mount_devise_token_auth_for "User", at: "auth"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
