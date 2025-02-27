@@ -10,7 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_27_173017) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_27_183210) do
+  create_table "addresses", force: :cascade do |t|
+    t.string "street"
+    t.string "city", limit: 100
+    t.string "country", limit: 100
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id"
+  end
+
+  create_table "appointments", force: :cascade do |t|
+    t.date "date", null: false
+    t.time "time", null: false
+    t.integer "patient_id", null: false
+    t.integer "doctor_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["doctor_id"], name: "index_appointments_on_doctor_id"
+    t.index ["patient_id"], name: "index_appointments_on_patient_id"
+  end
+
+  create_table "contacts", force: :cascade do |t|
+    t.string "number", limit: 50
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_contacts_on_user_id"
+  end
+
   create_table "doctors", force: :cascade do |t|
     t.string "firstname", limit: 50, null: false
     t.string "surname", limit: 50, null: false
@@ -68,6 +97,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_27_173017) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "addresses", "users"
+  add_foreign_key "appointments", "doctors"
+  add_foreign_key "appointments", "patients"
+  add_foreign_key "contacts", "users"
   add_foreign_key "doctors", "users"
   add_foreign_key "doctors_specializations", "doctors"
   add_foreign_key "doctors_specializations", "specializations"

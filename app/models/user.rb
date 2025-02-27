@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
 
   has_one :patient, dependent: :destroy
   has_one :doctor, dependent: :destroy
+  has_one :address, dependent: :destroy
+  has_many :contacts, dependent: :destroy
 
   enum role: { admin: 0, patient: 1, doctor: 2 }
 end
