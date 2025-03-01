@@ -46,6 +46,6 @@ class AppointmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def appointment_params
-      params.expect(appointment: [ :date, :time, :patient_id, :doctor_id ])
+      params.expect(appointment: [ :time, :patient_id, :doctor_id, :specialization_id ])
     end
 end
