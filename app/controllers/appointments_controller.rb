@@ -7,8 +7,8 @@ class AppointmentsController < ApplicationController
     render json: @appointments
   end
 
-  def detailed_index # possible params: doctor_name, patient_name, date_start, date_end
-    # ex.: localhost:3000/appointments_detailed?patient_name=patient2&date_start=2024-11-01
+  def detailed_index # possible params: doctor_name (first+surname), patient_name (first+surname), date_start, date_end
+    # ex.: localhost:3000/appointments_detailed?patient_name=patient2firstname%20patient2surname&date_start=2024-11-01
 
     # Using Rails ORM (without including filter params):
     # @appointments = Appointment.includes(:doctor, :patient, :specialization)
@@ -55,7 +55,7 @@ class AppointmentsController < ApplicationController
     sql = sql + " ORDER BY a.time"
 
     list = ActiveRecord::Base.connection.execute(ActiveRecord::Base.send(:sanitize_sql_array, [ sql, *values ]))
-
+    # sanitize_sql_array - avoid sql inj
     render json: list
   end
 
