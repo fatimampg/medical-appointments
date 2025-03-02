@@ -2,7 +2,8 @@ require "test_helper"
 
 class AppointmentsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @appointment = appointments(:one)
+    #@appointment = appointments(:one)
+    @appointment = Appointment.first
   end
 
   test "should get index" do
@@ -12,8 +13,9 @@ class AppointmentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create appointment" do
     assert_difference("Appointment.count") do
-      post appointments_url, params: { appointment: { date: @appointment.date, doctor_id: @appointment.doctor_id, patient_id: @appointment.patient_id, time: @appointment.time } }, as: :json
+      post appointments_url, params: { appointment: { doctor_id: @appointment.doctor_id, patient_id: @appointment.patient_id, specialization_id: @appointment.specialization_id, time: @appointment.time } }, as: :json
     end
+    puts @response.body
 
     assert_response :created
   end
@@ -24,7 +26,7 @@ class AppointmentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update appointment" do
-    patch appointment_url(@appointment), params: { appointment: { date: @appointment.date, doctor_id: @appointment.doctor_id, patient_id: @appointment.patient_id, time: @appointment.time } }, as: :json
+    patch appointment_url(@appointment), params: { appointment: { doctor_id: @appointment.doctor_id, patient_id: @appointment.patient_id, time: @appointment.time } }, as: :json
     assert_response :success
   end
 
