@@ -58,14 +58,14 @@ namespace :test_db do
     puts "Creating patients"
     patient1 = Patient.create!(
       user_id: user_with_role_patient[0].id,
-      firstname: "doctor1firstname",
-      surname: "doctor1surname",
+      firstname: "patient1firstname",
+      surname: "patient1surname",
       birthdate: Date.new(1990, 1, 1)
     )
     patient2 = Patient.create!(
       user_id: user_with_role_patient[1].id,
-      firstname: "doctor2firstname",
-      surname: "doctor2surname",
+      firstname: "patient2firstname",
+      surname: "patient2surname",
       birthdate: Date.new(1980, 1, 1)
     )
 
