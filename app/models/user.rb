@@ -8,5 +8,8 @@ class User < ActiveRecord::Base
   has_one :address, dependent: :destroy
   has_many :contacts, dependent: :destroy
 
-  enum role: { admin: 0, patient: 1, doctor: 2 }
+  enum :role, { admin: 0, patient: 1, doctor: 2 }
+
+  validates :role, presence: true
+  validates :email, presence: true
 end
