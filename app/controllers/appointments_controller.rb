@@ -1,11 +1,62 @@
 class AppointmentsController < ApplicationController
   before_action :set_appointment, only: %i[ show update destroy ]
 
-  # GET /appointments
   def index
     @appointments = Appointment.all
 
     render json: @appointments
+  end
+
+  def detailed_index # possible params: doctor_name, patient_name, date_start, date_end
+    # ex.: localhost:3000/appointments_detailed?patient_name=patient2&date_start=2024-11-01
+
+    # Using Rails ORM (without including filter params):
+    # @appointments = Appointment.includes(:doctor, :patient, :specialization)
+    # appointments_details = @appointments.map do |appointment|
+    #   {
+    #     date: appointment.time,
+    #     doctor: "#{appointment.doctor.firstname} #{appointment.doctor.surname}",
+    #     patient: "#{appointment.patient.firstname} #{appointment.patient.surname}",
+    #     specialization: appointment.specialization.name
+    #   }
+    # end
+
+    sql = "SELECT d.firstname || ' ' || d.surname as doctor, a.time as date, s.name as specialization, p.firstname || ' ' || p.surname as patient
+            FROM doctors d
+            INNER JOIN appointments a
+              ON d.id = a.doctor_id
+            INNER JOIN patients p
+              ON a.patient_id = p.id
+            INNER JOIN specializations s
+              ON a.specialization_id = s.id"
+    filter_criteria = []
+    values = []
+
+    if params[:doctor_name].present?
+      filter_criteria.push("d.firstname || ' ' || d.surname LIKE ?")
+      values.push("%#{params[:doctor_name]}%")
+    end
+    if params[:patient_name].present?
+      filter_criteria.push("p.firstname || ' ' || p.surname LIKE ?")
+      values.push("%#{params[:patient_name]}%")
+    end
+    if params[:date_start].present? && params[:date_end].present?
+      filter_criteria.push("a.time BETWEEN ? AND ?")
+      values.push(params[:date_start], params[:date_end])
+    end
+    if params[:date_start].present? && !params[:date_end].present?
+      filter_criteria.push("a.time > ?")
+      values.push(params[:date_start])
+    end
+
+    if filter_criteria!= []
+      sql = sql + " WHERE " + filter_criteria.join(" AND ")
+    end
+    sql = sql + " ORDER BY a.time"
+
+    list = ActiveRecord::Base.connection.execute(ActiveRecord::Base.send(:sanitize_sql_array, [ sql, *values ]))
+
+    render json: list
   end
 
   # GET /appointments/1

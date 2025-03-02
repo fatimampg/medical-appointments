@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
-  resources :appointments
+  resources :appointments, only: [ :index, :show, :create, :update, :destroy ]
   resources :doctors
   resources :patients
   resources :specializations
   # resources :doctors_specializations
+  get "appointments_detailed", to: "appointments#detailed_index"
 
   mount_devise_token_auth_for "User", at: "auth"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
