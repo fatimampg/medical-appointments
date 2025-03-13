@@ -10,7 +10,12 @@ class AppointmentsController < ApplicationController
   def detailed_index # possible params: doctor_name (first+surname), patient_name (first+surname), date_start, date_end
     # ex.: localhost:3000/appointments_detailed?patient_name=patient2firstname%20patient2surname&date_start=2024-11-01
 
-    # Using Rails ORM (without including filter params):
+    # NOTES - IMPROVEMENT:
+    # i) concatenating firstname and surname queries is not efficient... add column fullname defined and updated based on the firstname and surname (and add index), check alternatives. ii) Query for fullname with LIKE search, requires full scan... use full text search? iii) Split this into different queries based on the needs (or params) (probably not all this filters will be used at the same time.)
+
+    # ACTIVE RECORD QUERYING:
+
+    # Approach 1 - without including any params/filter:, just include all info:
     # @appointments = Appointment.includes(:doctor, :patient, :specialization)
     # appointments_details = @appointments.map do |appointment|
     #   {
@@ -20,6 +25,19 @@ class AppointmentsController < ApplicationController
     #     specialization: appointment.specialization.name
     #   }
     # end
+    #
+    # Approach 2 - using join (from Active Record)
+    # @appointments = Appointment.joins(:doctor, :patient, :specialization)
+    #     .where("doctors.firstname || ' ' || doctors.surname LIKE ?", "%#{params[:doctor_name]}%")
+    #     .where("patients.firstname || ' ' || patients.surname LIKE ?", "%#{params[:patient_name]}%")
+    #     .where("appointments.time BETWEEN ? AND ?", params[:date_start], params[:date_end])
+    #     .order("appointments.time")
+    # # ...
+    # if filter_criteria!= []
+    # @appointments = @appointments.where(filter_criteria.join(" AND "), *values)
+    # end
+
+    # RAW SQL:
 
     sql = "SELECT d.firstname || ' ' || d.surname as doctor, a.time as date, s.name as specialization, p.firstname || ' ' || p.surname as patient
             FROM doctors d
